@@ -59,11 +59,11 @@ Note : Open your browser and navigate to http://127.0.0.1:5000
 
 ## How to Run the Tests and Linting
 
-$$ Run code linting with Ruff
+$$ Run code linting with Ruff -> 
 ruff check .
 
-$$ Run automated tests with pytest
+$$ Run automated tests with pytest -> 
 pytest
 
-$$ Run tests with line coverage (pytest-cov)
+$$ Run tests with line coverage (pytest-cov) -> 
 pytest --cov=.
