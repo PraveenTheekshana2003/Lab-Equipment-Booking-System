@@ -12,7 +12,7 @@ A web-based Lab Equipment Booking System built with Flask, SQLite, and pytest to
 | W.T.Subhani        | Tharu-S               | M2: Equipment Catalogue        | QA Lead           |
 | G.S.Vimukthi       | Shahanvimukthi        | M3: Booking Form & Model       | GitHub / CI Lead  |
 | G.D.Navodya        | DiniNavoR             | M4: Validation & Tests         | Review Lead       |
-| R.A.D.G.Y.Ranawaka | Githmi812             | M5: Approval, Integration & CI |                   |
+| R.A.D.G.Y.Ranawaka | Githmi812             | M5: Approval, Integration & CI | Coordinator       |
 
 ---
 
