@@ -6,13 +6,15 @@ A web-based Lab Equipment Booking System built with Flask, SQLite, and pytest to
 
 ## Group Members & GitHub Usernames
 
-| Name               | GitHub Username       | Module Allocation              | Coordination Role |
-| :----------------- | :-------------------- | :----------------------------- | :---------------- |
-| M.P.Theekshana     | PraveenTheekshana2003 | M1: Accounts & Authentication  | Project Manager   |
-| W.T.Subhani        | Tharu-S               | M2: Equipment Catalogue        | QA Lead           |
-| G.S.Vimukthi       | Shahanvimukthi        | M3: Booking Form & Model       | GitHub / CI Lead  |
-| G.D.Navodya        | DiniNavoR             | M4: Validation & Tests         | Review Lead       |
-| R.A.D.G.Y.Ranawaka | Githmi812             | M5: Approval, Integration & CI | Coordinator       |
+| Name               | Index No | Reg No       | GitHub Username       | Module Allocation                | Coordination Role |
+| :----------------- | :------- | :----------- | :-------------------- | :------------------------------- | :---------------- |
+| M.P.Theekshana     |    6316  | ASP/2023/165 | PraveenTheekshana2003 | M1: Accounts & Authentication    | Project Manager   |
+| W.T.Subhani        |    6243  | ASP/2023/102 | Tharu-S               | M2: Equipment Catalogue          | QA Lead           |
+| G.S.Vimukthi       |    6215  | ASP/2023/035 | Shahanvimukthi        | M3: Booking Form & Model         | GitHub / CI Lead  |
+| G.D.Navodya        |    6219  | ASP/2023/024 | DiniNavoR             | M4: Validation & Tests           | Review Lead       |
+| R.A.D.G.Y.Ranawaka |    6311  | ASP/2023/158 | Githmi812             | M5: Approval, Integration & CI   | Coordinator       |
+
+---
 
 ---
 
