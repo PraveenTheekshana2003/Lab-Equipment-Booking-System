@@ -1,7 +1,7 @@
 import os
 import tempfile
 import pytest
-from main import app, db, User
+from main import app, db
 
 
 @pytest.fixture
