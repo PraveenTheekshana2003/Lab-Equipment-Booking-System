@@ -1,1 +1,1 @@
-//new js file for authentication
+/* will create authentication functions */
