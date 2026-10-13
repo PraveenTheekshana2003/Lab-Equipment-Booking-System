@@ -9,8 +9,17 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="font-bold text-lg tracking-wide">🔬 LabBooker</a>
+            <div class="space-x-4">
+                <a href="/" class="hover:text-indigo-200 transition">Home</a>
+                <a href="/login" class="bg-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-800 transition">Login / Register</a>
+            </div>
+        </div>
+    </nav>
 
 
     <!-- External JavaScript -->
