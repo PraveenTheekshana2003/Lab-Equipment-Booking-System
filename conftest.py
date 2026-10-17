@@ -1,44 +1,58 @@
-"""Pytest fixtures for Lab Equipment Booking System."""
+"""Pytest fixtures – CI-safe version."""
 
-import pytest
 import os
 import tempfile
-from main import app as flask_app, db, User, Equipment
+
+import pytest
+
+# Import ALL models so create_all() builds every table (including bookings)
+from main import app as flask_app, db, User, Equipment, Booking  # noqa: F401
 
 
 @pytest.fixture(scope="session")
 def app():
-    db_fd, db_path = tempfile.mkstemp(suffix=".db")
-    # Point at a fresh temp DB before any engine is created for the default path
-    flask_app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
-    flask_app.config["TESTING"] = True
-    flask_app.config["SECRET_KEY"] = "test-secret-key"
+    """One temporary database for the whole test session."""
+    fd, path = tempfile.mkstemp(suffix=".db")
+    os.close(fd)
+
+    flask_app.config.update(
+        {
+            "TESTING": True,
+            "SQLALCHEMY_DATABASE_URI": f"sqlite:///{path}",
+            "SECRET_KEY": "test-secret-key",
+        }
+    )
 
     with flask_app.app_context():
-        db.create_all()
+        db.create_all()  # creates users, equipment, bookings
         yield flask_app
         db.session.remove()
         db.drop_all()
 
-    os.close(db_fd)
     try:
-        os.unlink(db_path)
+        os.unlink(path)
     except OSError:
         pass
 
 
 @pytest.fixture(autouse=True)
 def clean_db(app):
-    """Reset tables between tests."""
+    """
+    Reset data before every test.
+    Uses drop_all + create_all so we never DELETE from a missing table.
+    """
     with app.app_context():
-        for table in reversed(db.metadata.sorted_tables):
-            db.session.execute(table.delete())
-        db.session.commit()
+        db.session.remove()
+        db.drop_all()
+        db.create_all()
+
         staff = User(username="staff", email="staff@test.com", role="staff")
         staff.set_password("staffpass")
+
         student = User(username="student",
                        email="student@test.com", role="student")
         student.set_password("studentpass")
+
         eq = Equipment(
             name="Test Pi",
             category="SBC",
@@ -52,8 +66,10 @@ def clean_db(app):
             description="Out of service item",
             status="Out of service",
         )
+
         db.session.add_all([staff, student, eq, eq_oos])
         db.session.commit()
+
     yield
 
 
