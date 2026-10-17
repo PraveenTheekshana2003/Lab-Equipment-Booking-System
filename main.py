@@ -68,7 +68,7 @@ def login():
   if user and user.check_password(data['password']):
     return (
         jsonify({
-            'message': 'Login successful',
+            'message': 'Login successful',git checkout -b feature/login.html/structure
             'username': user.username,
             'role': user.role,
         }),
