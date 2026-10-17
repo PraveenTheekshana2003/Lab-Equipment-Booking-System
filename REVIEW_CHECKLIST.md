@@ -19,3 +19,25 @@ Before approving and merging a Pull Request into `main`, reviewers must verify t
 ## 4. Documentation & Maintenance
 - [ ] Relevant documentation (e.g., inline comments, docstrings, or README) is updated if necessary.
 - [ ] Database migrations or schema updates (if any) are properly documented.
+
+
+# Code Review Checklist
+
+Use this checklist when reviewing a pull request. Leave a comment confirming the items checked.
+
+```
+[ ] User inputs are validated.
+[ ] Business rules and conditions are correct.
+[ ] Database operations are appropriate.
+[ ] Login and role restrictions are checked.
+[ ] Errors are handled appropriately.
+[ ] No passwords or secret values are committed.
+[ ] Relevant automated tests have been added.
+[ ] Existing tests still pass.
+```
+
+## Reviewer notes
+
+- A student must **not** approve their own pull request.
+- If any item fails, request changes before merging.
+- Reference the related GitHub Issue in the PR description.
