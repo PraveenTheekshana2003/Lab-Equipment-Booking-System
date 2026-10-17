@@ -4,7 +4,7 @@ Flask application implementing FR-00 to FR-04.
 """
 
 import os
-from datetime import datetime, date, time, timedelta
+from datetime import datetime, date, time
 from functools import wraps
 
 from flask import (
@@ -26,7 +26,6 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import and_, or_
 
 # ---------------------------------------------------------------------------
 # App configuration
