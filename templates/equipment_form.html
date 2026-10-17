@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{% if equipment %}Edit{% else %}Add{% endif %} Equipment – LabBook{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>{% if equipment %}Edit Equipment{% else %}Add Equipment{% endif %}</h1>
+      <p>{% if equipment %}Update details for {{ equipment.name }}{% else %}Create a new equipment item{% endif %}</p>
+    </div>
+    <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">← Back</a>
+  </div>
+
+  <div class="card" style="max-width:560px;padding:1.75rem;">
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label" for="name">Name *</label>
+        <input class="form-control" type="text" id="name" name="name" required
+               value="{{ equipment.name if equipment else '' }}" placeholder="e.g. Raspberry Pi 4 Kit">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="category">Category *</label>
+        <input class="form-control" type="text" id="category" name="category" required
+               value="{{ equipment.category if equipment else '' }}"
+               placeholder="e.g. Single-board computers">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="description">Description *</label>
+        <textarea class="form-control" id="description" name="description" required
+                  placeholder="Brief description of the equipment">{{ equipment.description if equipment else '' }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="status">Status</label>
+        <select class="form-control" id="status" name="status">
+          <option value="Available" {% if equipment and equipment.status == 'Available' %}selected{% endif %}>Available</option>
+          <option value="Out of service" {% if equipment and equipment.status == 'Out of service' %}selected{% endif %}>Out of service</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="image">Image filename (in static/images/)</label>
+        <input class="form-control" type="text" id="image" name="image"
+               value="{{ equipment.image if equipment else '' }}"
+               placeholder="e.g. raspberry-pi.jpg">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">
+        {% if equipment %}Save Changes{% else %}Add Equipment{% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
