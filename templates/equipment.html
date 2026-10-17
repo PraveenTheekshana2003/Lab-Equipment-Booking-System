@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Equipment Catalogue – LabBook{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>Equipment Catalogue</h1>
+      <p>Browse available lab equipment and check status</p>
+    </div>
+    {% if current_user.is_staff %}
+    <a href="{{ url_for('equipment_add') }}" class="btn btn-primary">+ Add Equipment</a>
+    {% endif %}
+  </div>
+
+  <div class="filter-bar">
+    <form method="GET" action="{{ url_for('equipment_list') }}" class="d-flex gap-1 flex-wrap align-center">
+      <select name="category" class="form-control" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+      {% if selected_category %}
+      <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary btn-sm">Clear filter</a>
+      {% endif %}
+    </form>
+  </div>
+
+  {% if equipment %}
+  <div class="equipment-grid">
+    {% for eq in equipment %}
+    <div class="card">
+      {% if eq.image %}
+      <img class="card-img-top" src="{{ url_for('static', filename='images/' + eq.image) }}"
+           alt="{{ eq.name }}" onerror="this.style.display='none'">
+      {% endif %}
+      <div class="card-body">
+        <div class="d-flex justify-between align-center mb-2">
+          <h3 class="card-title">{{ eq.name }}</h3>
+          <span class="status-badge {% if eq.status == 'Available' %}status-available{% else %}status-out{% endif %}">
+            {{ eq.status }}
+          </span>
+        </div>
+        <p class="card-text">{{ eq.description }}</p>
+        <p class="text-muted" style="font-size:0.8rem;">Category: {{ eq.category }}</p>
+        <div class="d-flex gap-1 mt-2 flex-wrap">
+          {% if eq.status == 'Available' %}
+          <a href="{{ url_for('booking_request') }}?equipment_id={{ eq.id }}" class="btn btn-primary btn-sm">Book</a>
+          {% endif %}
+          {% if current_user.is_staff %}
+          <a href="{{ url_for('equipment_edit', eq_id=eq.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+          <form method="POST" action="{{ url_for('equipment_delete', eq_id=eq.id) }}"
+                onsubmit="return confirm('Delete {{ eq.name }}?');" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card empty-state">
+    <p>No equipment found{% if selected_category %} in this category{% endif %}.</p>
+    {% if current_user.is_staff %}
+    <a href="{{ url_for('equipment_add') }}" class="btn btn-primary mt-2">Add Equipment</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
