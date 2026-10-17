@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}About – LabBook{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>About LabBook</h1>
+      <p>Lab Equipment Booking System – Mini Project 2026</p>
+    </div>
+  </div>
+
+  <div class="card about-section" style="padding:2rem;">
+    <h2>Overview</h2>
+    <p>
+      The Faculty maintains a shared collection of equipment used by students for coursework
+      and projects. This web system replaces manual paper-based bookings and prevents
+      double bookings, lost records and availability confusion.
+    </p>
+
+    <h2>Who can use it?</h2>
+    <ul>
+      <li><strong>Students</strong> – Register, browse equipment, request bookings and track status.</li>
+      <li><strong>Lab Staff</strong> – Manage equipment inventory, review requests and approve or reject them.</li>
+    </ul>
+
+    <h2>Equipment examples</h2>
+    <ul>
+      <li>Raspberry Pi kits</li>
+      <li>Arduino kits</li>
+      <li>Oscilloscopes</li>
+      <li>VR headsets</li>
+      <li>3D printing equipment</li>
+    </ul>
+
+    <h2>Key business rule</h2>
+    <p>
+      An equipment item cannot have overlapping <em>Pending</em> or <em>Approved</em> bookings.
+      A booking that starts exactly when another ends is allowed.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      For questions about the system or equipment availability, please contact the Lab Staff
+      or your course coordinator.
+    </p>
+    <p class="text-muted" style="margin-top:1.5rem;font-size:0.9rem;">
+      Built with Flask, SQLite, Flask-SQLAlchemy and Flask-Login.<br>
+      Software Engineering Mini Project – October 2026.
+    </p>
+  </div>
+</div>
+{% endblock %}

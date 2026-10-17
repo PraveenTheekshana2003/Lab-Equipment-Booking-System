@@ -1,71 +1,137 @@
 # Lab Equipment Booking System
 
-A web-based Lab Equipment Booking System built with Flask, SQLite, and pytest to manage equipment reservations for university students and lab staff.
+A small web-based system for managing shared lab equipment bookings (Raspberry Pi, Arduino, oscilloscopes, VR headsets, 3D printers, etc.).
 
----
+Built for the Software Engineering Mini Project (9–23 October 2026).
 
-## Group Members & GitHub Usernames
+## Group Members
 
-| Name               | Index No | Reg No       | GitHub Username       | Module Allocation                | Coordination Role |
-| :----------------- | :------- | :----------- | :-------------------- | :------------------------------- | :---------------- |
-| M.P.Theekshana     |    6316  | ASP/2023/165 | PraveenTheekshana2003 | M1: Accounts & Authentication    | Project Manager   |
-| W.T.Subhani        |    6243  | ASP/2023/102 | Tharu-S               | M2: Equipment Catalogue          | QA Lead           |
-| G.S.Vimukthi       |    6215  | ASP/2023/035 | Shahanvimukthi        | M3: Booking Form & Model         | GitHub / CI Lead  |
-| G.D.Navodya        |    6219  | ASP/2023/024 | DiniNavoR             | M4: Validation & Tests           | Review Lead       |
-| R.A.D.G.Y.Ranawaka |    6311  | ASP/2023/158 | Githmi812             | M5: Approval, Integration & CI   | Coordinator       |
+| Name | GitHub Username | Module | Coordination Role |
+|------|-----------------|--------|-------------------|
+| Member 1 | @username1 | M1 – Accounts & Authentication | Project Manager |
+| Member 2 | @username2 | M2 – Equipment Catalogue | QA Lead |
+| Member 3 | @username3 | M3 – Booking form & model | GitHub/CI Lead |
+| Member 4 | @username4 | M4 – Booking validation & tests | Review Lead |
+| Member 5 | @username5 | M5 – Approval, integration & CI | Coordinator |
 
----
+*(Replace with real names and usernames.)*
 
----
+## Features (FR-00 – FR-04)
 
-## Software Requirements
+- **FR-00** Student registration & login; staff accounts seeded; hashed passwords; role-based access
+- **FR-01** Equipment catalogue (CRUD for staff); filter by category; status Available / Out of service
+- **FR-02** Students request bookings (equipment + date + start/end time)
+- **FR-03** Validation: duration 30 min–4 h, no past bookings, no overlaps on Pending/Approved, out-of-service blocked
+- **FR-04** Staff approve/reject pending requests; students view own status
 
-* **Python** (version 3.11 or newer)
-* **Flask** & **Flask-SQLAlchemy**
-* **pytest** & **pytest-cov**
-* **Ruff** (for code linting)
-* **Git** & **GitHub Actions**
+## Technology
 
----
+| Area | Technology |
+|------|------------|
+| Language | Python 3.11+ |
+| Framework | Flask |
+| Database | SQLite |
+| ORM | Flask-SQLAlchemy |
+| Auth | Flask-Login + Werkzeug password hashing |
+| Front-end | Jinja2, HTML, CSS (glassmorphism) |
+| Testing | pytest + pytest-cov |
+| Linting | Ruff |
+| CI | GitHub Actions |
 
-## Installation Instructions
+## Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/PraveenTheekshana2003/Lab-Equipment-Booking-System.git](https://github.com/PraveenTheekshana2003/Lab-Equipment-Booking-System.git)
-   cd Lab-Equipment-Booking-System
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd Lab-Equipment-Booking-System
 
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
----
-
-## How to Run the Application
-
-1. **Create and activate a virtual environment:**
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-
-
-$$ Install the dependencies:
+# Install dependencies
 pip install -r requirements.txt
 
-$$ Initialize the database and run the Flask development server
-python app.py
-Note : Open your browser and navigate to http://127.0.0.1:5000
+# Initialise database (creates tables + seed data)
+flask --app main init-db
+# Or simply run the app once – seed runs automatically
+```
 
+## Running the Application
 
----
+```bash
+python main.py
+# or
+flask --app main run --debug
+```
 
-## How to Run the Tests and Linting
+Open http://127.0.0.1:5000
 
-$$ Run code linting with Ruff -> 
-ruff check .
+### Default accounts (after seed)
 
-$$ Run automated tests with pytest -> 
-pytest
+| Role | Username | Password |
+|------|----------|----------|
+| Staff | `staff` | `staff123` |
+| Student | `student` | `student123` |
 
-$$ Run tests with line coverage (pytest-cov) -> 
-pytest --cov=.
+**Change these passwords in production.** Staff accounts cannot be registered publicly; only students can self-register.
+
+## Running Tests
+
+```bash
+pytest -v
+pytest --cov=main --cov-report=term-missing
+```
+
+## Project Structure
+
+```
+Lab-Equipment-Booking-System/
+├── main.py                 # Application, models, routes, validation
+├── conftest.py             # Pytest fixtures
+├── requirements.txt
+├── .gitignore
+├── README.md
+├── TESTING.md
+├── REVIEW_CHECKLIST.md
+├── RETROSPECTIVE.md
+├── .github/workflows/ci.yml
+├── static/
+│   ├── css/style.css
+│   ├── js/auth.js
+│   └── images/             # Place equipment images here
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── equipment.html
+│   ├── equipment_form.html
+│   ├── bookings.html
+│   ├── booking_form.html
+│   └── about.html
+└── tests/
+    ├── test_auth.py
+    ├── test_equipment.py
+    ├── test_booking_validation.py
+    └── test_approval.py
+```
+
+## Equipment Images
+
+Place the following images in `static/images/` (filenames used by seed data):
+
+- `raspberry-pi.jpg`
+- `arduino.jpg`
+- `oscilloscope.jpg`
+- `vr-headset.jpg`
+- `3d-printer.jpg`
+
+You already have these in your project folder from the screenshots.
+
+## Security Notes
+
+- Passwords are stored with Werkzeug’s `generate_password_hash` (never plain text).
+- Students cannot access staff-only routes (`@staff_required`).
+- No secrets committed; use environment variable `SECRET_KEY` for production.
+- SQLite DB lives in `instance/` and is git-ignored.

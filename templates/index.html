@@ -1,40 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Lab Equipment Booking System</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="bg-indigo-600 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="/" class="font-bold text-lg tracking-wide">🔬 LabBooker</a>
-            <div class="space-x-4">
-                <a href="/" class="hover:text-indigo-200 transition">Home</a>
-                <a href="/login" class="bg-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-800 transition">Login / Register</a>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
+{% block title %}Lab Equipment Booking System{% endblock %}
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-16 flex-grow w-full flex items-center justify-center">
-        <div class="text-center">
-            <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Welcome to LabBooker</h1>
-            <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-                Efficiently browse, reserve, and manage laboratory equipment for your academic and research needs.
-            </p>
-            <div class="space-x-4">
-                <a href="/login" class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:bg-indigo-700 transition">Get Started</a>
-            </div>
-        </div>
-    </main>
+{% block content %}
+<section class="hero">
+  <h1>Book Lab Equipment<br><span>Simply &amp; Securely</span></h1>
+  <p>
+    Reserve Raspberry Pi kits, Arduino boards, oscilloscopes, VR headsets,
+    3D printers and more. No more double bookings or lost paper records.
+  </p>
+  <div class="hero-actions">
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+      <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary">Browse Equipment</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="btn btn-primary">Login / Register</a>
+      <a href="{{ url_for('about') }}" class="btn btn-secondary">Learn More</a>
+    {% endif %}
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-slate-400 text-center py-4 text-sm">
-        <p>&copy; 2026 Lab Equipment Booking System | E1 Milestone</p>
-    </footer>
-</body>
-</html>
+<div class="container">
+  <div class="stats-grid">
+    <div class="card stat-card">
+      <div class="stat-value">5+</div>
+      <div class="stat-label">Equipment Categories</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-value">30 min</div>
+      <div class="stat-label">Minimum Booking</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-value">4 h</div>
+      <div class="stat-label">Maximum Duration</div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-value">Real-time</div>
+      <div class="stat-label">Availability Check</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
