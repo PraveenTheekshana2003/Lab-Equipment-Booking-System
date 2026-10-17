@@ -24,7 +24,7 @@ def app():
     )
 
     with flask_app.app_context():
-        db.create_all()  # creates users, equipment, bookings
+        db.create_all()
         yield flask_app
         db.session.remove()
         db.drop_all()
@@ -37,10 +37,7 @@ def app():
 
 @pytest.fixture(autouse=True)
 def clean_db(app):
-    """
-    Reset data before every test.
-    Uses drop_all + create_all so we never DELETE from a missing table.
-    """
+    """Reset data before every test."""
     with app.app_context():
         db.session.remove()
         db.drop_all()
@@ -49,8 +46,7 @@ def clean_db(app):
         staff = User(username="staff", email="staff@test.com", role="staff")
         staff.set_password("staffpass")
 
-        student = User(username="student",
-                       email="student@test.com", role="student")
+        student = User(username="student", email="student@test.com", role="student")
         student.set_password("studentpass")
 
         eq = Equipment(
@@ -86,6 +82,5 @@ def staff_client(client):
 
 @pytest.fixture
 def student_client(client):
-    client.post(
-        "/login", data={"username": "student", "password": "studentpass"})
+    client.post("/login", data={"username": "student", "password": "studentpass"})
     return client

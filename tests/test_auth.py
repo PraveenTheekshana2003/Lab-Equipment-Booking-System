@@ -24,7 +24,6 @@ def test_register_user(client):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    # After successful register we land on login (or see success message)
     assert (
         b"Registration successful" in response.data
         or b"Login" in response.data
@@ -33,7 +32,6 @@ def test_register_user(client):
 
 
 def test_login_user(client):
-    # Register first
     client.post(
         "/register",
         data={
@@ -45,7 +43,6 @@ def test_login_user(client):
         follow_redirects=True,
     )
 
-    # Then login
     response = client.post(
         "/login",
         data={
@@ -79,7 +76,9 @@ def test_login_invalid_password(client):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    assert b"Invalid" in response.data or b"password" in response.data.lower()
+    # Failed login → stay on login page, do not reach dashboard
+    assert b"Dashboard" not in response.data
+    assert b"Sign In" in response.data or b"Login" in response.data
 
 
 def test_logout(student_client):
