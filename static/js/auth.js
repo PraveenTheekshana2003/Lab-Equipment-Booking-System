@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function switchTab(tab) {
     const loginForm = document.getElementById('form-login');
     const regForm = document.getElementById('form-register');
@@ -16,3 +17,6 @@ function switchTab(tab) {
         tabLogin.className = "flex-1 text-center font-bold text-slate-400 pb-2";
     }
 }
+=======
+/* will create authentication functions */
+>>>>>>> 1f62c4a973a06361d9f6d41b2142429c0822e114

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Request Booking – LabBook{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>Request a Booking</h1>
+      <p>Select equipment and preferred time slot (30 min – 4 hours)</p>
+    </div>
+    <a href="{{ url_for('bookings') }}" class="btn btn-secondary">← My Bookings</a>
+  </div>
+
+  <div class="card" style="max-width:520px;padding:1.75rem;">
+    {% if not equipment_list %}
+    <div class="empty-state">
+      <p>No available equipment at the moment.</p>
+      <a href="{{ url_for('equipment_list') }}" class="btn btn-secondary mt-2">View Catalogue</a>
+    </div>
+    {% else %}
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label" for="equipment_id">Equipment *</label>
+        <select class="form-control" id="equipment_id" name="equipment_id" required>
+          <option value="">— Select equipment —</option>
+          {% for eq in equipment_list %}
+          <option value="{{ eq.id }}"
+            {% if form_data and form_data.get('equipment_id')|int == eq.id %}selected{% endif %}>
+            {{ eq.name }} ({{ eq.category }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="booking_date">Date *</label>
+        <input class="form-control" type="date" id="booking_date" name="booking_date" required
+               value="{{ form_data.get('booking_date', '') if form_data else '' }}"
+               min="{{ today }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="start_time">Start Time *</label>
+        <input class="form-control" type="time" id="start_time" name="start_time" required
+               value="{{ form_data.get('start_time', '') if form_data else '' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="end_time">End Time *</label>
+        <input class="form-control" type="time" id="end_time" name="end_time" required
+               value="{{ form_data.get('end_time', '') if form_data else '' }}">
+      </div>
+      <div class="card" style="padding:0.9rem;margin-bottom:1.25rem;background:rgba(56,189,248,0.08);border-color:rgba(56,189,248,0.2);">
+        <p class="text-muted" style="font-size:0.85rem;margin:0;">
+          <strong>Rules:</strong> End time must be after start time · Duration 30 min – 4 hours ·
+          Cannot book in the past · No overlapping Pending/Approved bookings ·
+          Out-of-service equipment cannot be booked.
+        </p>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Submit Request</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  // Set min date to today
+  document.getElementById('booking_date').min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}
