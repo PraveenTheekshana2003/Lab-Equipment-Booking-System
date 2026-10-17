@@ -76,9 +76,9 @@ def test_login_invalid_password(client):
         follow_redirects=True,
     )
     assert response.status_code == 200
-    # Failed login → stay on login page, do not reach dashboard
-    assert b"Dashboard" not in response.data
+    # Still on the login page (not logged in)
     assert b"Sign In" in response.data or b"Login" in response.data
+    assert b"Welcome back" not in response.data
 
 
 def test_logout(student_client):
