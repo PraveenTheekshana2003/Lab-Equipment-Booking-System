@@ -2,19 +2,17 @@
 
 A small web-based system for managing shared lab equipment bookings (Raspberry Pi, Arduino, oscilloscopes, VR headsets, 3D printers, etc.).
 
-Built for the Software Engineering Mini Project (9–23 October 2026).
 
 ## Group Members
 
-| Name | GitHub Username | Module | Coordination Role |
-|------|-----------------|--------|-------------------|
-| Member 1 | @username1 | M1 – Accounts & Authentication | Project Manager |
-| Member 2 | @username2 | M2 – Equipment Catalogue | QA Lead |
-| Member 3 | @username3 | M3 – Booking form & model | GitHub/CI Lead |
-| Member 4 | @username4 | M4 – Booking validation & tests | Review Lead |
-| Member 5 | @username5 | M5 – Approval, integration & CI | Coordinator |
+| Name | GitHub Username | Registration No | Module | Coordination Role |
+|------|-----------------|-----------------|--------|-------------------|
+| Praveen Theekshana | PraveenTheekshana2003 |  ASP/2023/165 | M1 – Accounts & Authentication | Project Manager |
+| Tharushi Subhani | Tharu-S | ASP/2023/102 | M2 – Equipment Catalogue | QA Lead |
+| Shahan Vimukthi | Shahanvimukthi | ASP/2023/035 | M3 – Booking form & model | GitHub/CI Lead |
+| Dinithi Nvodya | DiniNavoR | ASP/2023/024 | M4 – Booking validation & tests | Review Lead |
+| Githma Yovinma | Githmi812 | ASP/2023/158 | M5 – Approval, integration & CI | Coordinator |
 
-*(Replace with real names and usernames.)*
 
 ## Features (FR-00 – FR-04)
 
@@ -74,7 +72,6 @@ Open http://127.0.0.1:5000
 | Staff | `staff` | `staff123` |
 | Student | `student` | `student123` |
 
-**Change these passwords in production.** Staff accounts cannot be registered publicly; only students can self-register.
 
 ## Running Tests
 
@@ -127,7 +124,6 @@ Place the following images in `static/images/` (filenames used by seed data):
 - `vr-headset.jpg`
 - `3d-printer.jpg`
 
-You already have these in your project folder from the screenshots.
 
 ## Security Notes
 
