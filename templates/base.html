@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Lab Equipment Booking{% endblock %}</title>
+  <title>{% block title %}LabSpace – Equipment Booking{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/logo.jpg') }}" type="image/jpg">
   {% block extra_css %}{% endblock %}
 </head>
 <body {% block body_attrs %}{% endblock %}>
   <nav class="navbar">
     <div class="container">
       <a href="{{ url_for('index') }}" class="navbar-brand">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-        </svg>
-        <span>LabBook</span>
+        <img
+          src="{{ url_for('static', filename='images/logo.jpg') }}"
+          alt="LabSpace"
+          class="navbar-logo"
+        >
+        <span>LabSpace</span>
       </a>
       <ul class="nav-links">
         {% if current_user.is_authenticated %}
@@ -57,7 +60,7 @@
   </main>
 
   <footer>
-    Lab Equipment Booking System &middot; Mini Project 2026
+    LabSpace &middot; Lab Equipment Booking System &middot; 2026
   </footer>
 
   {% block extra_js %}{% endblock %}
