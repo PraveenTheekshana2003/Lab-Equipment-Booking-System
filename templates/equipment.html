@@ -30,7 +30,7 @@
   {% if equipment %}
   <div class="equipment-grid">
     {% for eq in equipment %}
-    <div class="card">
+    <div class="card reveal">
       {% if eq.image %}
       <img class="card-img-top" src="{{ url_for('static', filename='images/' + eq.image) }}"
            alt="{{ eq.name }}" onerror="this.style.display='none'">
@@ -69,4 +69,8 @@
   </div>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/reveal.js') }}"></script>
 {% endblock %}
