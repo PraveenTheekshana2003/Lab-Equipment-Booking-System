@@ -1,23 +1,76 @@
 /* ============================================================
-   Lab Equipment Booking System – Modern Glassmorphism Theme
+   LabSpace – Lab Equipment Booking System
+   Modern Glassmorphism + Dark / Light Theme
    ============================================================ */
 
-:root {
-  --bg-dark: #0b1220;
-  --bg-card: rgba(255, 255, 255, 0.06);
-  --bg-card-hover: rgba(255, 255, 255, 0.1);
-  --border-glass: rgba(255, 255, 255, 0.12);
+/* ========== DARK THEME (default) ========== */
+:root,
+[data-theme="dark"] {
+  --bg-primary: #0b0f1a;
+  --bg-secondary: #12182b;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-card-hover: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-glass: rgba(255, 255, 255, 0.1);
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
-  --accent: #38bdf8;
-  --accent-hover: #0ea5e9;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
-  --info: #60a5fa;
+  --text-muted: #64748b;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
   --radius: 16px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-  --font: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius-sm: 10px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+  --nav-bg: rgba(11, 15, 26, 0.85);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-bg-focus: rgba(255, 255, 255, 0.08);
+  --table-header-bg: rgba(255, 255, 255, 0.04);
+  --table-hover: rgba(255, 255, 255, 0.03);
+  --nav-link-hover: rgba(255, 255, 255, 0.08);
+  --btn-secondary-bg: rgba(255, 255, 255, 0.08);
+  --btn-secondary-hover: rgba(255, 255, 255, 0.14);
+  --auth-tabs-bg: rgba(255, 255, 255, 0.04);
+  --auth-tab-active: rgba(99, 102, 241, 0.2);
+  --footer-color: #64748b;
+  --btn-primary-text: #ffffff;
+}
+
+/* ========== LIGHT THEME ========== */
+[data-theme="light"] {
+  --bg-primary: #f0f4ff;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --border: rgba(99, 102, 241, 0.15);
+  --border-glass: rgba(99, 102, 241, 0.15);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --accent: #4f46e5;
+  --accent-hover: #6366f1;
+  --accent-glow: rgba(79, 70, 229, 0.2);
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #2563eb;
+  --shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --input-bg: rgba(15, 23, 42, 0.04);
+  --input-bg-focus: rgba(15, 23, 42, 0.06);
+  --table-header-bg: rgba(15, 23, 42, 0.03);
+  --table-hover: rgba(79, 70, 229, 0.04);
+  --nav-link-hover: rgba(79, 70, 229, 0.08);
+  --btn-secondary-bg: rgba(15, 23, 42, 0.05);
+  --btn-secondary-hover: rgba(15, 23, 42, 0.1);
+  --auth-tabs-bg: rgba(15, 23, 42, 0.04);
+  --auth-tab-active: rgba(79, 70, 229, 0.12);
+  --footer-color: #94a3b8;
+  --btn-primary-text: #ffffff;
 }
 
 *,
@@ -34,15 +87,22 @@ html {
 
 body {
   font-family: var(--font);
-  background: var(--bg-dark);
+  background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   line-height: 1.6;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(56, 189, 248, 0.18), transparent),
-    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(167, 139, 250, 0.12), transparent),
-    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(52, 211, 153, 0.08), transparent);
-  background-attachment: fixed;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, var(--accent-glow), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139, 92, 246, 0.12), transparent);
+  pointer-events: none;
+  z-index: -1;
 }
 
 a {
@@ -56,7 +116,7 @@ a:hover {
 
 /* ---------- Navbar ---------- */
 .navbar {
-  background: rgba(11, 18, 32, 0.75);
+  background: var(--nav-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-glass);
@@ -64,6 +124,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: background 0.3s ease;
 }
 
 .navbar .container {
@@ -84,7 +145,7 @@ a:hover {
   gap: 0.6rem;
 }
 
-.navbar-brand .navbar-logo {
+.navbar-logo {
   height: 40px;
   width: auto;
   object-fit: contain;
@@ -116,7 +177,7 @@ a:hover {
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--nav-link-hover);
 }
 
 .nav-user {
@@ -127,6 +188,7 @@ a:hover {
   padding-left: 1rem;
   border-left: 1px solid var(--border-glass);
 }
+
 .nav-user .badge-role {
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
@@ -139,6 +201,46 @@ a:hover {
 .nav-user .badge-role.staff {
   background: rgba(167, 139, 250, 0.2);
   color: #c4b5fd;
+}
+
+[data-theme="light"] .nav-user .badge-role.staff {
+  color: #7c3aed;
+}
+
+/* ---------- Theme toggle ---------- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.theme-toggle:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.theme-icon-light {
+  display: none;
+}
+
+[data-theme="light"] .theme-icon-dark {
+  display: none;
+}
+
+[data-theme="light"] .theme-icon-light {
+  display: inline;
 }
 
 /* ---------- Container ---------- */
@@ -175,7 +277,8 @@ a:hover {
 .alert-info    { background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.3); color: var(--info); }
 
 /* ---------- Cards (glassmorphism) ---------- */
-.card {
+.card,
+.glass {
   background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -185,9 +288,10 @@ a:hover {
   overflow: hidden;
   transition: transform 0.25s, background 0.25s, border-color 0.25s;
 }
-.card:hover {
+.card:hover,
+.glass:hover {
   background: var(--bg-card-hover);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--border);
 }
 
 .card-img-top {
@@ -205,6 +309,7 @@ a:hover {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.35rem;
+  color: var(--text-primary);
 }
 
 .card-text {
@@ -252,21 +357,21 @@ a:hover {
   font-family: inherit;
 }
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), #0ea5e9);
-  color: #0b1220;
+  background: linear-gradient(135deg, var(--accent), #818cf8);
+  color: var(--btn-primary-text);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  color: #0b1220;
+  background: linear-gradient(135deg, var(--accent-hover), #a78bfa);
+  color: var(--btn-primary-text);
   transform: translateY(-1px);
 }
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--btn-secondary-bg);
   color: var(--text-primary);
   border: 1px solid var(--border-glass);
 }
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--btn-secondary-hover);
   color: var(--text-primary);
 }
 .btn-success {
@@ -298,7 +403,7 @@ a:hover {
 .form-control {
   width: 100%;
   padding: 0.7rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--input-bg);
   border: 1px solid var(--border-glass);
   border-radius: 10px;
   color: var(--text-primary);
@@ -309,7 +414,8 @@ a:hover {
 .form-control:focus {
   outline: none;
   border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--input-bg-focus);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 .form-control::placeholder {
   color: var(--text-secondary);
@@ -344,6 +450,7 @@ textarea.form-control {
   font-size: 1.6rem;
   margin-bottom: 0.35rem;
   text-align: center;
+  color: var(--text-primary);
 }
 .auth-card .subtitle {
   text-align: center;
@@ -355,7 +462,7 @@ textarea.form-control {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--auth-tabs-bg);
   border-radius: 12px;
   padding: 0.3rem;
 }
@@ -372,7 +479,7 @@ textarea.form-control {
   transition: all 0.2s;
 }
 .auth-tabs button.active {
-  background: rgba(56, 189, 248, 0.2);
+  background: var(--auth-tab-active);
   color: var(--accent);
 }
 .auth-note {
@@ -394,6 +501,7 @@ textarea.form-control {
 .page-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
+  color: var(--text-primary);
 }
 .page-header p {
   color: var(--text-secondary);
@@ -440,9 +548,10 @@ th, td {
   padding: 0.9rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-glass);
+  color: var(--text-primary);
 }
 th {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--table-header-bg);
   color: var(--text-secondary);
   font-weight: 600;
   font-size: 0.8rem;
@@ -450,7 +559,7 @@ th {
   letter-spacing: 0.04em;
 }
 tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(255, 255, 255, 0.03); }
+tr:hover td { background: var(--table-hover); }
 
 /* ---------- Filters ---------- */
 .filter-bar {
@@ -475,6 +584,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.03); }
   font-weight: 800;
   margin-bottom: 1rem;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 .hero h1 span {
   background: linear-gradient(135deg, var(--accent), #a78bfa);
@@ -503,6 +613,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.03); }
 .about-section h2 {
   margin: 1.75rem 0 0.75rem;
   font-size: 1.3rem;
+  color: var(--text-primary);
 }
 .about-section p, .about-section li {
   color: var(--text-secondary);
@@ -529,7 +640,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.03); }
 footer {
   text-align: center;
   padding: 1.5rem;
-  color: var(--text-secondary);
+  color: var(--footer-color);
   font-size: 0.85rem;
   border-top: 1px solid var(--border-glass);
   margin-top: 2rem;
@@ -562,5 +673,33 @@ footer {
   }
   .equipment-grid {
     grid-template-columns: 1fr;
+  }
+  .nav-user {
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
+/* ---------- Scroll reveal (equipment cards) ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
