@@ -69,8 +69,14 @@
   </div>
   {% endif %}
 </div>
+
+<!-- Back to top button -->
+<button id="back-to-top" class="back-to-top" aria-label="Back to top" title="Back to top">
+  ↑
+</button>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/reveal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/back-to-top.js') }}"></script>
 {% endblock %}
