@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="icon" href="{{ url_for('static', filename='images/logo.jpg') }}" type="image/jpg">
+  <link rel="icon" href="{{ url_for('static', filename='images/logo.jpg') }}" type="image/jpeg">
+  <script>
+    /* Apply saved theme before paint to avoid flash */
+    (function () {
+      var t = localStorage.getItem("labspace-theme") || "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
   {% block extra_css %}{% endblock %}
 </head>
 <body {% block body_attrs %}{% endblock %}>
@@ -32,6 +39,10 @@
         <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
       </ul>
       <div class="nav-user">
+        <button type="button" id="theme-toggle" class="theme-toggle" title="Toggle dark / light mode" aria-label="Toggle theme">
+          <span class="theme-icon theme-icon-dark">🌙</span>
+          <span class="theme-icon theme-icon-light">☀️</span>
+        </button>
         {% if current_user.is_authenticated %}
           <span class="badge-role {% if current_user.is_staff %}staff{% endif %}">
             {{ current_user.role }}
@@ -63,6 +74,7 @@
     LabSpace &middot; Lab Equipment Booking System &middot; 2026
   </footer>
 
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
