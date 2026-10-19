@@ -81,8 +81,16 @@ a:hover {
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
+
+.navbar-brand .navbar-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
 .navbar-brand span {
   background: linear-gradient(135deg, var(--accent), #a78bfa);
   -webkit-background-clip: text;
