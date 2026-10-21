@@ -5,8 +5,10 @@ import tempfile
 
 import pytest
 
+from main import Equipment, User, db
+
 # Import ALL models so create_all() builds every table (including bookings)
-from main import app as flask_app, db, User, Equipment, Booking  # noqa: F401
+from main import app as flask_app
 
 
 @pytest.fixture(scope="session")

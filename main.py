@@ -4,28 +4,28 @@ Flask application implementing FR-00 to FR-04.
 """
 
 import os
-from datetime import datetime, date, time
+from datetime import date, datetime, time
 from functools import wraps
 
 from flask import (
     Flask,
+    abort,
+    flash,
+    redirect,
     render_template,
     request,
-    redirect,
     url_for,
-    flash,
-    abort,
 )
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import (
     LoginManager,
     UserMixin,
+    current_user,
+    login_required,
     login_user,
     logout_user,
-    login_required,
-    current_user,
 )
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # ---------------------------------------------------------------------------
 # App configuration
@@ -37,7 +37,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Ensure instance folder exists
 os.makedirs(app.instance_path, exist_ok=True)
 
 db = SQLAlchemy(app)
@@ -56,7 +55,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default="student")  # student | staff
+    role = db.Column(db.String(20), nullable=False, default="student")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     bookings = db.relationship("Booking", backref="user", lazy=True)
@@ -79,7 +78,7 @@ class Equipment(db.Model):
     name = db.Column(db.String(120), nullable=False)
     category = db.Column(db.String(80), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default="Available")  # Available | Out of service
+    status = db.Column(db.String(20), nullable=False, default="Available")
     image = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -99,7 +98,7 @@ class Booking(db.Model):
     booking_date = db.Column(db.Date, nullable=False)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default="Pending")  # Pending | Approved | Rejected
+    status = db.Column(db.String(20), nullable=False, default="Pending")
     rejection_reason = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -141,17 +140,12 @@ def validate_booking(
     end_time: time,
     exclude_booking_id: int | None = None,
 ) -> list[str]:
-    """
-    Validate a booking request against all FR-03 rules.
-    Returns a list of error messages (empty = valid).
-    """
+    """Validate a booking request against all FR-03 rules."""
     errors: list[str] = []
 
-    # Rule 1 – Start and end time
     if end_time <= start_time:
         errors.append("End time must be later than start time.")
 
-    # Rule 2 – Booking duration (30 min – 4 hours)
     start_dt = datetime.combine(booking_date, start_time)
     end_dt = datetime.combine(booking_date, end_time)
     duration = (end_dt - start_dt).total_seconds() / 60
@@ -160,17 +154,13 @@ def validate_booking(
     if duration > 240:
         errors.append("Booking cannot exceed 4 hours.")
 
-    # Rule 3 – Past bookings
     now = datetime.now()
     if start_dt < now:
         errors.append("Booking cannot start in the past.")
 
-    # Rule 4 – Equipment status
     if equipment.status == "Out of service":
         errors.append("This equipment is currently out of service and cannot be booked.")
 
-    # Rule 5 – Overlapping bookings (Pending or Approved only)
-    # A booking that starts exactly when another ends is allowed.
     query = Booking.query.filter(
         Booking.equipment_id == equipment.id,
         Booking.booking_date == booking_date,
@@ -179,10 +169,7 @@ def validate_booking(
     if exclude_booking_id:
         query = query.filter(Booking.id != exclude_booking_id)
 
-    existing = query.all()
-    for b in existing:
-        # Overlap if: start < existing.end AND end > existing.start
-        # Exact boundary (start == existing.end or end == existing.start) is OK
+    for b in query.all():
         if start_time < b.end_time and end_time > b.start_time:
             errors.append(
                 f"Overlaps with an existing {b.status.lower()} booking "
@@ -431,7 +418,9 @@ def bookings():
 @app.route("/bookings/request", methods=["GET", "POST"])
 @login_required
 def booking_request():
-    equipment_list_ = Equipment.query.filter_by(status="Available").order_by(Equipment.name).all()
+    equipment_list_ = (
+        Equipment.query.filter_by(status="Available").order_by(Equipment.name).all()
+    )
 
     if request.method == "POST":
         equipment_id = request.form.get("equipment_id", type=int)
@@ -492,7 +481,6 @@ def booking_approve(booking_id):
         flash("Only pending bookings can be approved.", "warning")
         return redirect(url_for("bookings"))
 
-    # Re-validate in case of race conditions
     errors = validate_booking(
         booking.equipment,
         booking.booking_date,
@@ -530,7 +518,7 @@ def booking_reject(booking_id):
 
 
 # ---------------------------------------------------------------------------
-# About / Contact
+# About
 # ---------------------------------------------------------------------------
 @app.route("/about")
 def about():
@@ -538,57 +526,70 @@ def about():
 
 
 # ---------------------------------------------------------------------------
-# CLI / seed helpers
+# Seed data (matches what the tests expect)
 # ---------------------------------------------------------------------------
 def seed_data():
-    """Create staff account and sample equipment if database is empty."""
+    """Create staff, student and sample equipment if database is empty."""
     if User.query.filter_by(role="staff").first():
-        return  # already seeded
+        return
 
-    # Staff account (password must be changed in production)
+    # id=1 → staff
     staff = User(username="staff", email="staff@lab.edu", role="staff")
     staff.set_password("staff123")
     db.session.add(staff)
 
-    # Demo student
+    # id=2 → student  (tests use user_id=2)
     student = User(username="student", email="student@lab.edu", role="student")
     student.set_password("student123")
     db.session.add(student)
 
-    # Sample equipment matching the assignment images
     samples = [
+        {
+            "name": "Test Pi",
+            "category": "SBC",
+            "description": "Test Raspberry Pi kit used by automated tests.",
+            "status": "Available",
+            "image": "raspberry-pi.jpg",
+        },
+        {
+            "name": "Broken Scope",
+            "category": "Test equipment",
+            "description": "Out of service oscilloscope for validation tests.",
+            "status": "Out of service",
+            "image": None,
+        },
         {
             "name": "Raspberry Pi 4 Kit",
             "category": "Single-board computers",
-            "description": "Complete Raspberry Pi 4 starter kit with power supply, case, and microSD card. Ideal for IoT and embedded projects.",
+            "description": "Complete Raspberry Pi 4 starter kit.",
             "status": "Available",
             "image": "raspberry-pi.jpg",
         },
         {
             "name": "Arduino Uno Kit",
             "category": "Microcontrollers",
-            "description": "Arduino Uno R3 with sensors, LEDs, breadboard and jumper wires. Perfect for electronics prototyping.",
+            "description": "Arduino Uno R3 with sensors and breadboard.",
             "status": "Available",
             "image": "arduino.jpg",
         },
         {
             "name": "Digital Oscilloscope",
             "category": "Test equipment",
-            "description": "100 MHz dual-channel digital storage oscilloscope. Used for signal analysis and circuit debugging.",
+            "description": "100 MHz dual-channel digital storage oscilloscope.",
             "status": "Available",
             "image": "oscilloscope.jpg",
         },
         {
             "name": "VR Headset (Meta Quest)",
             "category": "Virtual Reality",
-            "description": "Standalone VR headset for immersive experiences, simulation and educational applications.",
+            "description": "Standalone VR headset for immersive experiences.",
             "status": "Available",
             "image": "vr-headset.jpg",
         },
         {
             "name": "3D Printer (Ender-3)",
             "category": "Fabrication",
-            "description": "FDM 3D printer with heated bed. Suitable for prototyping mechanical parts and housings.",
+            "description": "FDM 3D printer with heated bed.",
             "status": "Available",
             "image": "3d-printer.jpg",
         },
@@ -597,7 +598,7 @@ def seed_data():
         db.session.add(Equipment(**s))
 
     db.session.commit()
-    print("Seed data created: staff/staff123, student/student123 + 5 equipment items.")
+    print("Seed data created: staff/staff123, student/student123 + equipment.")
 
 
 @app.cli.command("init-db")
@@ -608,17 +609,10 @@ def init_db_command():
     print("Database initialised.")
 
 
-# ---------------------------------------------------------------------------
-# Application factory style entry (for tests & CLI)
-# ---------------------------------------------------------------------------
 def create_app(test_config=None):
-    """Return configured app. For tests pass a temporary DATABASE_URL."""
+    """Return configured app (used by tests)."""
     if test_config:
         app.config.update(test_config)
-        if "SQLALCHEMY_DATABASE_URI" in test_config:
-            with app.app_context():
-                db.session.remove()
-                db.engine.dispose()
     return app
 
 
