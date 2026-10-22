@@ -2,17 +2,15 @@
 
 A small web-based system for managing shared lab equipment bookings (Raspberry Pi, Arduino, oscilloscopes, VR headsets, 3D printers, etc.).
 
-
 ## Group Members
 
 | Name | GitHub Username | Registration No | Module | Coordination Role |
 |------|-----------------|-----------------|--------|-------------------|
-| Praveen Theekshana | PraveenTheekshana2003 |  ASP/2023/165 | M1 – Accounts & Authentication | Project Manager |
+| Praveen Theekshana | PraveenTheekshana2003 | ASP/2023/165 | M1 – Accounts & Authentication | Project Manager |
 | Tharushi Subhani | Tharu-S | ASP/2023/102 | M2 – Equipment Catalogue | QA Lead |
 | Shahan Vimukthi | Shahanvimukthi | ASP/2023/035 | M3 – Booking form & model | GitHub/CI Lead |
 | Dinithi Nvodya | DiniNavoR | ASP/2023/024 | M4 – Booking validation & tests | Review Lead |
 | Githma Yovinma | Githmi812 | ASP/2023/158 | M5 – Approval, integration & CI | Coordinator |
-
 
 ## Features (FR-00 – FR-04)
 
@@ -72,7 +70,6 @@ Open http://127.0.0.1:5000
 | Staff | `staff` | `staff123` |
 | Student | `student` | `student123` |
 
-
 ## Running Tests
 
 ```bash
@@ -123,7 +120,6 @@ Place the following images in `static/images/` (filenames used by seed data):
 - `oscilloscope.jpg`
 - `vr-headset.jpg`
 - `3d-printer.jpg`
-
 
 ## Security Notes
 
